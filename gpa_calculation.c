@@ -11,7 +11,7 @@ typedef struct
     int year;
 } Course;
 
-/* Change one lowercase letter to uppercase. */
+// Change one lowercase letter to uppercase.
 char make_upper(char ch)
 {
     if (ch >= 'a' && ch <= 'z')
@@ -21,7 +21,7 @@ char make_upper(char ch)
     return ch;
 }
 
-/* Go through a word and make each letter uppercase. */
+// Go through a word and make each letter uppercase.
 void string_upper(char str[])
 {
     int i = 0;
@@ -32,7 +32,7 @@ void string_upper(char str[])
     }
 }
 
-/* Convert a letter grade to grade points on a 4.0 scale. */
+// Convert a letter grade to grade points on a 4.0 scale.
 double grade_points(char grade)
 {
     grade = make_upper(grade);
@@ -51,7 +51,7 @@ double grade_points(char grade)
     return -1.0;
 }
 
-/* Check if the semester is one of the allowed values. */
+// Check if the semester is one of the allowed values.
 int valid_semester(char semester[])
 {
     if (strcmp(semester, "SPRING") == 0)
@@ -65,7 +65,7 @@ int valid_semester(char semester[])
 
 int main()
 {
-    /* This array holds all valid classes the user enters. */
+    // This array holds all valid classes the user enters.
     Course courses[MAX_COURSES];
     char line[100];
     char again = 'Y';
@@ -74,9 +74,10 @@ int main()
 
     printf("----> To quit entering grades, enter a blank line.\n");
 
+    // Keep asking the user for classes until they choose to stop or reach the maximum number of courses.
     while (again == 'Y' || again == 'y')
     {
-        /* Temporary variables for one class entry from the user. */
+        // Temporary variables for one class entry from the user.
         char grade;
         int hours;
         char semester[10];
@@ -96,13 +97,14 @@ int main()
             break;
         }
 
+        // Read input in the format: Grade Hours Semester Year
         if (sscanf(line, " %c %d %9s %d", &grade, &hours, semester, &year) != 4)
         {
             printf("Invalid input. Please follow the example format.\n");
             continue;
         }
 
-        /* Make grade and semester uppercase so input is case-insensitive. */
+        // Make grade and semester uppercase so input is case-insensitive.
         grade = make_upper(grade);
         string_upper(semester);
 
@@ -130,7 +132,7 @@ int main()
             continue;
         }
 
-        /* Save this class now that all checks have passed. */
+        // Save this class now that all checks have passed.
         courses[count].grade = grade;
         courses[count].hours = hours;
         strcpy(courses[count].semester, semester);
@@ -139,7 +141,7 @@ int main()
 
         printf("Would you like to add another class? (Y/N): ");
         scanf(" %c", &again);
-        getchar(); /* Remove leftover Enter key from input buffer. */
+        getchar(); // Remove leftover Enter key from input buffer.
     }
 
     printf("-------------------------------------\n");
@@ -155,13 +157,14 @@ int main()
         return 0;
     }
 
+    // Loop through all courses and group them by semester and year to calculate and print the GPA for each term.
     for (i = 0; i < count; i++)
     {
         int already_printed = 0;
         int semester_hours = 0;
         double semester_points = 0.0;
 
-        /* If this term was already shown, skip it to avoid duplicates. */
+        // If this term was already shown, skip it to avoid duplicates.
         for (j = 0; j < i; j++)
         {
             if (strcmp(courses[i].semester, courses[j].semester) == 0 &&
@@ -171,15 +174,17 @@ int main()
             }
         }
 
+        // Skip this semester if it was already calculated earlier in the loop.
         if (already_printed)
             continue;
 
-        /* Add up hours and points for this semester and year. */
+        // Add up hours and points for this semester and year.
         for (j = 0; j < count; j++)
         {
             if (strcmp(courses[i].semester, courses[j].semester) == 0 &&
                 courses[i].year == courses[j].year)
             {
+                // GPA = total grade points divided by total credit hours for the semester.
                 semester_hours += courses[j].hours;
                 semester_points += grade_points(courses[j].grade) * courses[j].hours;
             }
@@ -195,7 +200,8 @@ int main()
     int total_hours = 0;
     double total_points = 0.0;
 
-    /* Overall GPA = total quality points / total credit hours. */
+    // Calculate total hours and total grade points for overall GPA.
+    // Overall GPA = total quality points / total credit hours.
     for (i = 0; i < count; i++)
     {
         total_hours += courses[i].hours;
@@ -209,3 +215,6 @@ int main()
 
     return 0;
 }
+
+// gcc .\gpa_calculation.c -o .\gpa_calculation.exe
+// .\gpa_calculation.exe
